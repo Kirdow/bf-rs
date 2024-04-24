@@ -1,0 +1,1 @@
+@cargo run demo/demo.bf

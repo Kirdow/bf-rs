@@ -1,8 +1,10 @@
-use std::{env, fs::File, io::{self, Read}};
+mod types;
+mod program;
 
+use program::Program;
 use types::Sym;
 
-mod types;
+use std::{env, fs::File, io::{self, Read}};
 
 fn read_code(filename: &str) -> io::Result<String> {
     let mut file = File::open(filename)?;
@@ -16,8 +18,21 @@ fn parse_program(file: String) -> Result<Vec<Sym>, String> {
 
     let mut stack: Vec<u64> = Vec::new();
 
+    let mut comment: bool = false;
     let mut ip: u64 = 0;
     for c in file.chars() {
+        // Parse comment
+        if comment {
+            if c == '\n' {
+                comment = false;
+            }
+            continue;
+        } else if c == ';' {
+            comment = true;
+            continue;
+        }
+
+        // Parse symbols
         let sym = match c {
             '>' => Sym::IncPtr,
             '<' => Sym::DecPtr,
@@ -31,12 +46,13 @@ fn parse_program(file: String) -> Result<Vec<Sym>, String> {
             },
             ']' => {
                 if let Some(begin_ip) = stack.pop() {
-                    program[begin_ip as usize] = Sym::Begin(ip);
-                    Sym::End(begin_ip+1)
+                    program[begin_ip as usize] = Sym::Begin(ip - 1);
+                    Sym::End(begin_ip)
                 } else {
                     return Err(format!("Failed to parse program, char '{}' at IP {} unexpected", c, ip));
                 }
             },
+            // Invalid symbols are basically just whitespace in regards to the spec
             _ => continue,
         };
 
@@ -79,13 +95,8 @@ fn main() {
         return;
     }
 
-    let program = program.unwrap();
-
-    println!("Program:");
-    let mut ip: u64 = 0;
-    for sym in program.iter() {
-        println!(" {}: {}", ip, sym);
-        ip += 1;
+    let mut program = Program::new(program.unwrap());
+    if let Err(e) = program.run() {
+        eprintln!("Failed executing program: {}", e);
     }
-    println!("Total instructions: {}", ip);
 }
