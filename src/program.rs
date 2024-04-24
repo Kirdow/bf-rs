@@ -1,4 +1,7 @@
+use std::io::{stdout, Write};
+
 use crate::types::Sym;
+use crate::input::Input;
 
 pub enum ProgramState {
     Running,
@@ -9,7 +12,8 @@ pub struct Program {
     code: Vec<Sym>,
     state: Vec<u8>,
     ptr: u64,
-    ip: u64
+    ip: u64,
+    input: Input
 }
 
 impl Program {
@@ -18,7 +22,8 @@ impl Program {
             code,
             state: vec![0; 30000],
             ptr: 0,
-            ip: 0
+            ip: 0,
+            input: Input::new()
         }
     }
 
@@ -36,8 +41,11 @@ impl Program {
             Sym::DecPtr => self.ptr -= 1,
             Sym::Inc => self.state[self.ptr as usize] = self.state[self.ptr as usize].wrapping_add(1),
             Sym::Dec => self.state[self.ptr as usize] = self.state[self.ptr as usize].wrapping_sub(1),
-            Sym::WriteOut => print!("{}", self.state[self.ptr as usize] as char),
-            Sym::ReadIn => {},
+            Sym::WriteOut => {
+                print!("{}", self.state[self.ptr as usize] as char);
+                stdout().flush().expect("Failed to write to stdout");
+            },
+            Sym::ReadIn => self.state[self.ptr as usize] = self.input.next(),
             Sym::Begin(end_ptr) => self.ip = end_ptr.to_owned(),
             Sym::End(begin_ptr) => {
                 if self.state[self.ptr as usize] != 0 {

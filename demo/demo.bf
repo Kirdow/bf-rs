@@ -6,3 +6,15 @@
 
 ; Print out the result
 .
+
+; Also print B and C
++.+.
+
+; Take input
+,
+
+; Increment input two times
+++
+
+; Print the result
+.

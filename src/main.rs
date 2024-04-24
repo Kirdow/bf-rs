@@ -1,5 +1,6 @@
 mod types;
 mod program;
+mod input;
 
 use program::Program;
 use types::Sym;
