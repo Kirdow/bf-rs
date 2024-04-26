@@ -1,0 +1,25 @@
+{
+    "name": "brainfuck-syntax",
+    "displayName": "Brainfuck Syntax Highlighting",
+    "description": "Syntax highlighting for BF-RS Brainfuck.",
+    "version": "0.0.1",
+    "publisher": "Kirdow",
+    "engines": {
+      "vscode": "^1.58.0"
+    },
+    "categories": ["Programming Languages"],
+    "contributes": {
+      "languages": [{
+        "id": "bf",
+        "aliases": ["BF", "bf"],
+        "extensions": [".bf"],
+        "configuration": "./syntaxes/bf.tmLanguage.json"
+      }],
+      "grammars": [{
+        "language": "bf",
+        "scopeName": "source.bf",
+        "path": "./syntaxes/bf.tmLanguage.json"
+      }]
+    }
+  }
+  

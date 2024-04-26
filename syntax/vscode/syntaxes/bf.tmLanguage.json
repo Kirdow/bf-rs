@@ -1,0 +1,53 @@
+{
+    "scopeName": "source.bf",
+    "name": "Brainfuck Custom",
+    "fileTypes": ["bf"],
+    "patterns": [
+        {
+        "name": "comment.line.semicolon.bf",
+        "match": ";.*$",
+        "captures": {
+            "0": {
+            "name": "comment.line.semicolon.bf",
+            "patterns": [
+                {
+                "match": ".",
+                "name": "comment.character.bf"
+                }
+            ]
+            }
+        }
+        },
+        {
+        "name": "keyword.control.bf",
+        "match": "[\\+\\-\\[\\]\\.<>,]",
+        "captures": {
+            "0": {
+            "name": "keyword.control.bf"
+            }
+        }
+        },
+        {
+        "match": "[^;\\+\\-\\[\\]\\.<>,\\n]+",
+        "name": "invalid.illegal.characters.bf"
+        }
+    ],
+    "repository": {
+        "illegal": {
+        "name": "invalid.illegal.character.bf",
+        "match": "."
+        }
+    },
+    "colors": {
+        "keyword.control.bf": {
+        "foreground": "#0000FF",
+        "fontStyle": "bold"
+        },
+        "comment.line.semicolon.bf": {
+        "foreground": "#90EE90"
+        },
+        "invalid.illegal.characters.bf": {
+        "foreground": "#90EE90"
+        }
+    }
+}
